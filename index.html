@@ -14,9 +14,7 @@
     <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script src="https://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
     <script src="scatter.js"></script>
-	<button onclick="myFunction()" align="center">About the Visualization</button>
-
-<div id="myDIV" style="display: none;">
+<div id="myDIV">
 	<p>For this project, I used a <b>Martini Glass</b> narrative visualization structure. I began with author-driven content for the first 3 scenes (specifically including only statistics that I thought best determined which player was the most valuable to his team) and ended with reader-driven content by allowing the reader to compare the top performers this year based on other metrics that were in the dataset.</p>
 
 <p><b>Scenes:</b> There are a total of 3 scenes in this narrative visualization, which include a scatterplot, bar charts, and tables. We begin by seeing an overview of the data in a scatterplot for what I think are 2 of the best metrics for evaluating overall performance, Win Shares and Player Efficiency Rating.</p>
@@ -27,15 +25,5 @@
 
 <p><b>Triggers:</b> Using the mouse wheel will allow you to zoom in or out in the plot and clicking and dragging the mouse shows you other portions of the graph. Also, if you hover over each point, a tooltip will appear providing more information about that point.</p>
 </div>
-<script>
-function myFunction() {
-    var x = document.getElementById('myDIV');
-    if (x.style.display === 'none') {
-        x.style.display = 'block';
-    } else {
-        x.style.display = 'none';
-    }
-}
-</script>
   </body>
 </html>

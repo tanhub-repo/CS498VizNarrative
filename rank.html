@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <title>CS 498 Final Project</title>
+  </head>
+  <h1>NBA MVP 2016-2017</h1>
+ <h2>
+<div><a href="index.html">Intro</a> - <a href="barchart.html">Player Value</a> - Rankings - </a><a href="table.html">Further Exploration</a> - <a href="links.html">Links</a></div>
+</h2>
+<style type="text/css">
+button {
+	margin: auto;
+	display: block;
+}
+
+table {
+	width: 100%;
+}
+
+table.menu {
+	width: auto;
+	margin-right: 0px;
+	margin-left: auto;
+}
+
+thead {
+  font-weight: normal;
+  text-align: center;
+  padding-right: 6px;
+  min-width: 43px;
+}
+
+tbody {
+  padding: 0;
+  border-left: solid 1px #000;
+  text-align: center;
+}
+
+td, th {
+    padding: 1px 4px;
+    border: 1px black solid;
+}
+
+</style>
+<html>
+  <head>
+    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <link rel='stylesheet' href='style.css'>
+  </head>
+  <body>
+  These are my findings based on the three statistics that I looked at (WS, PER, and VORP). My conclusions were determined in my midterm project before Russell Westbrook was announced to be the winner about a month ago. The Most Valuable Player award is subjective, since it is decided on by a panel of media personnel, each with their own criteria for evaluation. You can compare other statistics for the players that had a PER over 25, WS over 10, and VORP over 5 in the final scene on the next page and come to your own conclusion of who rightly deserved the MVP award of the 2016-2017 NBA season.
+   <div class="Scatter"> <script type='text/javascript' src='rank.js'></script></div>
+  <button onclick="myFunction()" align="center">About the Visualization</button>
+
+<div id="myDIV" style="display: none;">
+	<p>For this project, I used a <b>Martini Glass</b> narrative visualization structure. I began with author-driven content for the first 3 scenes (specifically including only statistics that I thought best determined which player was the most valuable to his team) and ended with reader-driven content by allowing the reader to compare the top performers this year based on other metrics that were in the dataset.</p>
+
+<p><b>Scenes:</b> In the third scene, I provided a basic table with the rankings for the 3 MVP finalists (as announced by the NBA) across all players in the 3 statistics that I used in scenes 1 and 2. I also gave an overall ranking by combining the rankings in those 3 categories for each finalist. This scene is the "jumping off" point of the Martini Glass structure as I've presented my findings and prepare the reader to make their own conclusions in the next scene.</p>
+
+<p><b>Annotations:</b> The overall rank column serves as an annotation to present the conclusion of this study.</p>
+
+<p><b>Parameters:</b> The parameter for this scene is the revealing of this text. Also, the text in the navigation bar indicates what scene the reader is currently in. </p>
+
+<p><b>Triggers:</b> Clicking on the links at the top of the page will direct you to the other scenes in this narrative and clicking on the "About the Visualization" button revealed the text that you are currently reading. </p>
+</div>
+<script>
+function myFunction() {
+    var x = document.getElementById('myDIV');
+    if (x.style.display === 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+}
+</script>
+  </body>
+</html>

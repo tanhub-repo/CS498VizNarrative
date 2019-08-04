@@ -1,0 +1,41 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>CS 498 Final Project</title>
+    <link rel="stylesheet" href="scatter.css" charset="utf-8">
+  </head>
+  <h1>NBA MVP 2016-2017</h1>
+ <h2>
+<div>Intro - <a href="barchart.html">Player Value</a> - <a href="rank.html">Rankings</a> - <a href="table.html">Further Exploration</a> - <a href="links.html">Links</a></div>
+</h2>
+  <body>
+    <div id="scatter" align="center"></div>
+
+    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="https://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+    <script src="scatter.js"></script>
+	<button onclick="myFunction()" align="center">About the Visualization</button>
+
+<div id="myDIV" style="display: none;">
+	<p>For this project, I used a <b>Martini Glass</b> narrative visualization structure. I began with author-driven content for the first 3 scenes (specifically including only statistics that I thought best determined which player was the most valuable to his team) and ended with reader-driven content by allowing the reader to compare the top performers this year based on other metrics that were in the dataset.</p>
+
+<p><b>Scenes:</b> There are a total of 4 scenes in this narrative visualization, which include a scatterplot, bar charts, and tables. We begin by seeing an overview of the data in a scatterplot for what I think are 2 of the best metrics for evaluating overall performance, Win Shares and Player Efficiency Rating.</p>
+
+<p><b>Annotations:</b> For this visualization, the annotation is the legend that color codes the players by position. Looking at the top right portion of the plot, it appears that many of the top players play the Small Forward position. The size of the points is also an annotation and it is associated with how many minutes that player played in order to counter the situations where a player performed extremely well in limited minutes. The tooltip shown when hovering over each point also serves as an annotation that provides the PER and WS values for each player.</p>
+
+<p><b>Parameters:</b> The parameter for this plot is the ability to change the axes since the plot is draggable and zoomable.</p>
+
+<p><b>Triggers:</b> Using the mouse wheel will allow you to zoom in or out in the plot and clicking and dragging the mouse shows you other portions of the graph. Also, if you hover over each point, a tooltip will appear providing more information about that point.</p>
+</div>
+<script>
+function myFunction() {
+    var x = document.getElementById('myDIV');
+    if (x.style.display === 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+}
+</script>
+  </body>
+</html>

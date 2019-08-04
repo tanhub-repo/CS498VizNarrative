@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <title>CS 498 Final Project</title>
+  </head>
+  <h1>NBA MVP 2016-2017</h1>
+ <h2>
+<div><a href="index.html">Intro</a> - <a href="barchart.html">Player Value</a> - <a href="rank.html">Rankings</a> - Further Exploration - <a href="links.html">Links</a></div>
+</h2>
+<style type="text/css">
+button {
+	margin: auto;
+	display: block;
+}
+
+table {
+  border-collapse: collapse;
+  font: 10px sans-serif;
+  width: 1000px;
+}
+
+table.menu {
+	width: auto;
+	margin-right: 0px;
+	margin-left: auto;
+}
+
+th {
+  font-weight: normal;
+  text-align: right;
+  padding-right: 6px;
+  min-width: 43px;
+}
+
+thead {
+  font-weight: bold;
+  text-align: center;
+  padding-right: 6px;
+  min-width: 43px;
+}
+
+thead td {
+  cursor: s-resize;
+}
+
+tbody tr:first-child td {
+  padding-top: 2px;
+}
+
+tbody td {
+  padding: 0;
+  border-left: solid 1px #000;
+}
+
+td, th {
+    padding: 1px 4px;
+    border: 1px black solid;
+}
+
+tbody rect {
+  fill: steelblue;
+}
+
+tbody tr:hover rect {
+  fill: brown;
+}
+
+</style>
+
+<table align="center">
+  <thead>
+    <tr>
+      <th>Player</th>
+      <td>TS%</td>
+      <td>3PAr</td>
+      <td>FTr</td>
+      <td>TRB%</td>
+      <td>AST%</td>
+      <td>STL%</td>
+      <td>BLK%</td>
+      <td>TOV%</td>
+      <td>BPM</td>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+
+<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<button onclick="myFunction()" align="center">About the Visualization</button>
+
+<div id="myDIV" style="display: none;">
+	<p>For this project, I used a <b>Martini Glass</b> narrative visualization structure. I began with author-driven content for the first 3 scenes (specifically including only statistics that I thought best determined which player was the most valuable to his team) and ended with reader-driven content by allowing the reader to compare the top performers this year based on other metrics that were in the dataset.</p>
+
+<p><b>Scenes:</b> This is the final scene where the reader-driven content is hosted. In my analysis, I looked at the 3 statistics that I believed best measured player value, but now I leave the reader with the data from other metrics that I didn't observe so that they can come to their own conclusion. They can sort each column from greatest to least by clicking on the column name of the statistic they would like to look at. Only players with a PER > 25, WS > 10, and VORP > 5 have been included as these are the top performers of this past season.</p>
+
+<p><b>Annotations:</b> The color that appears as you hover over a bar is the annotation for this chart, which allows you to easily see which player you are looking at. </p>
+
+<p><b>Parameters:</b> The parameter for this plot is the sorting of one statistic at a time, from greatest to least.</p>
+
+<p><b>Triggers:</b> The table is sortable from greatest to least for one metric by clicking on the column header for that metric. Hovering over each bar highlights all the bars for that player across the table.</p>
+</div>
+<script>
+function myFunction() {
+    var x = document.getElementById('myDIV');
+    if (x.style.display === 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+}
+</script>
+<script>
+
+d3.csv("mvpcandidates.csv", function(error, data) {
+  if (error) throw error;
+  
+  var ages = d3.keys(data[0]).filter(function(key) {
+    return key != "Player";
+  });
+  
+  d3.selectAll("thead td").data(ages).on("click", function(k) {
+    tr.sort(function(a, b) { return (b[k]) - (a[k]); });
+  });
+
+  var tr = d3.select("tbody").selectAll("tr")
+      .data(data)
+    .enter().append("tr");
+
+  tr.append("th")
+      .text(function(d) { return d.Player; });
+
+  tr.selectAll("td")
+      .data(function(d) { return ages.map(function(k) { return d[k]; }); })
+    .enter().append("td").append("svg")
+      .attr("width", 71)
+      .attr("height", 12)
+    .append("rect")
+      .attr("height", 12)
+      .attr("width", function(d) { return d; });
+});
+
+</script>

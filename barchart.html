@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <title>CS 498 Final Project</title>
+  </head>
+  <h1 align="left">NBA MVP 2016-2017</h1>
+ <h2>
+<div align="left"><a href="index.html">Intro</a> - Player Value - <a href="rank.html">Rankings</a> - <a href="table.html">Further Exploration</a> - <a href="links.html">Links</a></div>
+</h2>
+<style>
+
+.axis text {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.bar {
+  fill: steelblue;
+  fill-opacity: .9;
+}
+
+.bar:hover {
+  fill: brown;
+}
+
+button {
+	margin: auto;
+	display: block;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.d3-tip {
+  line-height: 1;
+  font-weight: bold;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 2px;
+}
+
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+  box-sizing: border-box;
+  display: inline;
+  font-size: 10px;
+  width: 100%;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.8);
+  content: "\25BC";
+  position: absolute;
+  text-align: center;
+}
+
+/* Style northward tooltips differently */
+.d3-tip.n:after {
+  margin: -1px 0 0 0;
+  top: 100%;
+  left: 0;
+}
+
+label {
+  position: relative;
+  top: 10px;
+  right: 10px;
+}
+
+</style>
+<label><input type="checkbox"> Sort values</label>
+<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="https://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+<script>
+
+var margin = {top: 40, right: 20, bottom: 40, left: 40},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+//var formatPercent = d3.format(".0%");
+
+var x = d3.scale.ordinal()
+    .rangeRoundBands([0, width], 0.1, 0.2);
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left");
+	
+var tip = d3.tip()
+  .attr('class', 'd3-tip')
+  .offset([-10, 0])
+  .html(function(d) {
+    return "<strong>VORP:</strong> <span style='color:white'>" + d.VORP + "</span>";
+  });
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+svg.call(tip);
+
+d3.csv("vorpgt5.csv", function(error, data) {
+  data.forEach(function(d) {
+    d.VORP = +d.VORP;
+  });
+
+  x.domain(data.map(function(d) { return d.Player; }));
+  y.domain([0, d3.max(data, function(d) { return d.VORP; })]);
+  
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis)
+	  .selectAll(".tick text")
+		.call(wrap, x.rangeBand());
+	  
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("Value Over Replacement Player (VORP)");
+
+  svg.selectAll(".bar")
+      .data(data)
+    .enter().append("rect")
+      .attr("class", "bar")
+      .attr("x", function(d) { return x(d.Player); })
+      .attr("width", x.rangeBand())
+      .attr("y", function(d) { return y(d.VORP); })
+      .attr("height", function(d) { return height - y(d.VORP); })
+	  .on('mouseover', tip.show)
+	  .on('mouseout', tip.hide);
+
+function wrap (text, width) {
+
+  text.each(function() {
+
+    var breakChars = ['/', '&', '-'],
+      text = d3.select(this),
+      textContent = text.text(),
+      spanContent;
+
+    breakChars.forEach(char => {
+      // Add a space after each break char for the function to use to determine line breaks
+      textContent = textContent.replace(char, char + ' ');
+    });
+
+    var words = textContent.split(/\s+/).reverse(),
+      word,
+      line = [],
+      lineNumber = 0,
+      lineHeight = 1.1, // ems
+      x = text.attr('x'),
+      y = text.attr('y'),
+      dy = parseFloat(text.attr('dy') || 0),
+      tspan = text.text(null).append('tspan').attr('x', x).attr('y', y).attr('dy', dy + 'em');
+
+    while (word = words.pop()) {
+      line.push(word);
+      tspan.text(line.join(' '));
+      if (tspan.node().getComputedTextLength() > width) {
+        line.pop();
+        spanContent = line.join(' ');
+        breakChars.forEach(char => {
+          // Remove spaces trailing breakChars that were added above
+          spanContent = spanContent.replace(char + ' ', char);
+        });
+        tspan.text(spanContent);
+        line = [word];
+        tspan = text.append('tspan').attr('x', x).attr('y', y).attr('dy', ++lineNumber * lineHeight + dy + 'em').text(word);
+      }
+    }
+  });
+
+}	  
+	  
+  d3.select("input").on("change", change);
+  
+  var sortTimeout = setTimeout(function() {
+    d3.select("input").property("checked", true).each(change);
+  }, 2000);
+
+  function change() {
+    clearTimeout(sortTimeout);
+
+    // Copy-on-write since tweens are evaluated after a delay.
+    var x0 = x.domain(data.sort(this.checked
+        ? function(a, b) { return b.VORP - a.VORP; }
+        : function(a, b) { return d3.ascending(a.Player, b.Player); })
+        .map(function(d) { return d.Player; }))
+        .copy();
+
+    svg.selectAll(".bar")
+        .sort(function(a, b) { return x0(a.Player) - x0(b.Player); });
+
+    var transition = svg.transition().duration(750),
+        delay = function(d, i) { return i * 50; };
+
+    transition.selectAll(".bar")
+        .delay(delay)
+        .attr("x", function(d) { return x0(d.Player); });
+
+    transition.select(".x.axis")
+        .call(xAxis)
+		.selectAll(".tick text")
+		.call(wrap, x.rangeBand())
+      .selectAll("g")
+        .delay(delay);
+  }
+});
+
+</script>
+<button onclick="myFunction()" align="center">About the Visualization</button>
+
+<div id="myDIV" style="display: none;">
+	<p>For this project, I used a <b>Martini Glass</b> narrative visualization structure. I began with author-driven content for the first 3 scenes (specifically including only statistics that I thought best determined which player was the most valuable to his team) and ended with reader-driven content by allowing the reader to compare the top performers this year based on other metrics that were in the dataset.</p>
+
+<p><b>Scenes:</b> In the second scene, we see the final statistic that I decided to use to evaluate which player is most valuable, Value Over Replacement Player (VORP). In my opinion, this is the metric that most literally translates to player value as it is the value that the player provides over another player that they would have been replaced with. I've included only those with a VORP value greater than 5 to make the chart more readable and clearly show the difference between the top players.</p>
+
+<p><b>Annotations:</b> The tooltip that appears as you hover over each bar is the annotation for this bar chart. It easily provides the reader with the VORP value for the highlighted player.</p>
+
+<p><b>Parameters:</b> The parameter for this plot is the sorting of VORP values, from greatest to least.</p>
+
+<p><b>Triggers:</b> Hovering over each bar shows the tooltip providing the VORP value for that individual. The other trigger is clicking on the checkbox to sort the bars by VORP value, from greatest to least. The bars are automatically sorted once the page has fully loaded and can be unsorted by clicking on the checkbox.</p>
+</div>
+<script>
+function myFunction() {
+    var x = document.getElementById('myDIV');
+    if (x.style.display === 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+}
+</script>
